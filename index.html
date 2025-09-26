@@ -1,1 +1,257 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Special Birthday Wish</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      color: #333;
+      text-align: center;
+      overflow-x: hidden;
+    }
+    section { display: none; padding: 50px; min-height: 100vh; }
+    #step1 { display: block; }
+
+    h1 { font-size: 2.5em; margin-bottom: 20px; }
+    input {
+      padding: 10px; font-size: 1em;
+      border-radius: 5px; border: none; margin-bottom: 20px;
+    }
+    button {
+      padding: 10px 20px; font-size: 1em;
+      border: none; border-radius: 5px;
+      background: #ff6f61; color: white; cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover { background: #ff3b2e; }
+
+    /* Balloons */
+    .balloon {
+      position: absolute; bottom: -150px;
+      width: 50px; height: 70px;
+      background: red; border-radius: 50%;
+      animation: floatUp 6s ease-in infinite;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(-120vh); opacity: 0; }
+    }
+
+    /* Cards Step 3 */
+    .cards {
+      display: flex; justify-content: center; flex-wrap: wrap;
+      gap: 20px; margin-top: 30px;
+    }
+    .card {
+      width: 120px; height: 160px; perspective: 1000px;
+      cursor: pointer; margin: 10px; /* spacing */
+    }
+    .card-inner {
+      position: relative; width: 100%; height: 100%;
+      transition: transform 0.6s; transform-style: preserve-3d;
+    }
+    .card.flipped .card-inner { transform: rotateY(180deg); }
+    .card-front, .card-back {
+      position: absolute; width: 100%; height: 100%;
+      backface-visibility: hidden; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2em; padding: 10px;
+    }
+    .card-front { background: #ff6f61; color: white; }
+    .card-back { background: #fff; transform: rotateY(180deg); }
+
+    /* Cake */
+    .cake {
+      position: relative; margin: 50px auto; width: 200px; height: 150px;
+      background: #ff6f61; border-radius: 10px;
+    }
+    .candle {
+      position: absolute; top: -40px; left: 50%;
+      transform: translateX(-50%);
+      width: 10px; height: 40px; background: yellow;
+    }
+    .flame {
+      position: absolute; top: -15px; left: 50%;
+      transform: translateX(-50%);
+      width: 20px; height: 20px;
+      background: orange; border-radius: 50%;
+      animation: flicker 0.3s infinite;
+    }
+    @keyframes flicker {
+      0% { opacity: 1; transform: translateX(-50%) scale(1); }
+      50% { opacity: 0.6; transform: translateX(-50%) scale(1.2); }
+      100% { opacity: 1; transform: translateX(-50%) scale(1); }
+    }
+
+    /* Typewriter */
+    .typewriter {
+      display: inline-block;
+      border-right: 3px solid #333;
+      white-space: pre-wrap; /* preserves line breaks */
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Step 1 -->
+  <section id="step1">
+    <h1>Enter Your Name 🎂</h1>
+    <input type="text" id="username" placeholder="Your Name">
+    <br>
+    <button onclick="startWish()">Start</button>
+  </section>
+
+  <!-- Step 2 -->
+  <section id="step2">
+    <h1 id="wishName"></h1>
+    <p id="blessing" class="typewriter"></p>
+    <br><br>
+    <button onclick="goToStep3()">Next ➡️</button>
+  </section>
+
+  <!-- Step 3 -->
+  <section id="step3">
+    <h1 class="typewriter" id="cardsTitle"></h1>
+    <div class="cards" id="cardsContainer"></div>
+    <br>
+    <button onclick="goToStep4()">Next ➡️</button>
+  </section>
+
+  <!-- Step 4 -->
+  <section id="step4">
+    <h1>Make a Wish & Blow the Candle 🎂</h1>
+    <div class="cake">
+      <div class="candle">
+        <div class="flame" id="flame"></div>
+      </div>
+    </div>
+    <button onclick="blowCandle()">Blow Candle</button>
+  </section>
+
+  <!-- Step 5 -->
+  <section id="step5">
+    <h1 id="finalMessage" class="typewriter"></h1>
+  </section>
+
+  <script>
+    let userName = "";
+
+    function startWish(){
+      userName = document.getElementById("username").value.trim();
+      if(userName === "") userName = "Friend";
+
+      document.getElementById("step1").style.display = "none";
+      document.getElementById("step2").style.display = "block";
+      document.getElementById("wishName").innerText = "Happy Birthday, " + userName + " 🎉";
+
+      // Balloons
+      for (let i = 0; i < 20; i++) {
+        let balloon = document.createElement("div");
+        balloon.className = "balloon";
+        balloon.style.left = Math.random() * 100 + "vw";
+        balloon.style.background = "hsl(" + Math.random() * 360 + ",100%,60%)";
+        balloon.style.animationDuration = (3 + Math.random() * 3) + "s";
+        document.body.appendChild(balloon);
+        setTimeout(() => { balloon.remove(); }, 6000);
+      }
+
+      // Typewriter Blessing
+      let blessingText = `May this birthday be a doorway to endless joy and countless blessings. Every year is a new chance to grow, to smile brighter, and to live with purpose. I wish you health, happiness, and the fulfillment of every dream you hold close to your heart. May your life be filled with moments that make you laugh until your cheeks hurt, with friends who stand by you through every season, and with family whose love always surrounds you. May Allah grant you barakah in your life, protect you from worries, and guide your steps towards success and peace. Today is not only a celebration of your birth but a reminder that you are a gift to everyone around you. You make life more colorful, more meaningful, and more memorable. So blow out the candles, make a wish, and believe that the best is yet to come. Happy Birthday 🎉`;
+      typeWriter(blessingText, "blessing", 40);
+    }
+
+    function playSong(){
+      const song = document.getElementById("birthdaySong");
+      song.currentTime = 0;
+      song.play();
+      document.getElementById("pauseBtn").style.display = "inline-block"; // Show pause/resume button
+    }
+
+    function toggleSong(){
+      const song = document.getElementById("birthdaySong");
+      if (song.paused) {
+        song.play();
+      } else {
+        song.pause();
+      }
+    }
+
+    function goToStep3(){
+      document.getElementById("step2").style.display = "none";
+      document.getElementById("step3").style.display = "block";
+      typeWriter("Flip the cards to reveal birthday wishes 🎁", "cardsTitle", 50);
+      createCards();
+    }
+
+    function createCards(){
+      const wishes = [
+        "Wishing you endless happiness!",
+        "May your dreams come true!",
+        "You are loved beyond measure!",
+        "Cheers to new adventures!",
+        "Stay blessed and joyful!"
+      ];
+      const container = document.getElementById("cardsContainer");
+      container.innerHTML = "";
+      wishes.forEach(wish => {
+        let card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <div class="card-inner">
+            <div class="card-front">🎁</div>
+            <div class="card-back">${wish}</div>
+          </div>`;
+        card.onclick = () => card.classList.toggle("flipped");
+        container.appendChild(card);
+      });
+    }
+
+    function goToStep4(){
+      document.getElementById("step3").style.display = "none";
+      document.getElementById("step4").style.display = "block";
+    }
+
+    function blowCandle(){
+      document.getElementById("flame").style.display = "none";
+      setTimeout(goToStep5, 1000);
+    }
+
+    function goToStep5(){
+      document.getElementById("step4").style.display = "none";
+      document.getElementById("step5").style.display = "block";
+      let finalText = `Once again, Happy Birthday ${userName}! 🎉
+
+May your days be filled with joy, love, and endless blessings. 🌸
+
+Always remember — you are special, you are loved, and you make life brighter for everyone around you. ✨
+
+Stay happy, stay blessed, and never stop smiling ❤️
+
+Our friendship and togetherness will take us to our destination,  
+I hope that this dream comes true  
+
+                INSHALLAH, INSHALLAH 🤍🤍`;
+      typeWriter(finalText, "finalMessage", 50);
+    }
+
+    // Typewriter Function
+    function typeWriter(text, elementId, speed){
+      let i = 0;
+      document.getElementById(elementId).innerHTML = "";
+      function typing(){
+        if(i < text.length){
+          document.getElementById(elementId).innerHTML += text.charAt(i);
+          i++;
+          setTimeout(typing, speed);
+        }
+      }
+      typing();
+    }
+  </script>
+</body>
+</html>
